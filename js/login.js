@@ -5,27 +5,28 @@ const validateEmail = (email) => {
     return re.test(email);
 };
 
-const loginLogic = (e) => {
+const logUserIn = (e) => {
   let email = document.querySelector('input').value;
   if(validateEmail(email)) {
     window.EMAIL = email;
-    NAVBAR.logIn();
-    NAVBAR.modifyUrl('logged');
-    requirejs(['js/router'], router => router('logged', 'logged'));
+    localStorage.setItem('loggedUserEmail', email);
+    NAVBAR.goToHasher();
   } else {
-
+    $('.alert-danger')
+      .fadeIn('slow')
+      .fadeOut(1500);
   }
 }
 
 const activate = () => {
-  return new Promise((resolve) => {
-    document.querySelector('#login').addEventListener('click', loginLogic)
+  return new Promise((resolve, reject) => {
+    document.querySelector('#login').addEventListener('click', logUserIn);
     resolve();
   });
 }
 
 const deactivate = () => {
-  document.querySelector('#login').removeEventListener('click', loginLogic, false);
+  document.querySelector('#login').removeEventListener('click', logUserIn, false);
 }
 
 const login = () => {

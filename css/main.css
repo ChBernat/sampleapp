@@ -14,3 +14,21 @@
 .navbar-toggle {
     z-index:3;
 }
+
+div.alert.alert-danger {
+  opacity: 1;
+}
+
+div.alert.alert-danger,
+div.alert.alert-success.alert-hasher,
+a.btn.btn-logout,
+a.btn.btn-results,
+a.btn.btn-hasher {
+  display: none;
+}
+
+div.alert.alert-success.alert-hasher {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}

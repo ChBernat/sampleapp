@@ -19,7 +19,8 @@ const hasher = (function(){
     requirejs(['js/navbar'], navbar => window.NAVBAR = navbar())
     setConfig();
     requirejs(['js/router'], (router) => {
-      router('login', 'login')
+      window.router = router;
+      router.changeRoute('login', 'login');
     });
   };
 
