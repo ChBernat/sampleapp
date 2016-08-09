@@ -1,8 +1,6 @@
 'use strict';
 
-const navbar = () => {
-
-
+const navbar = function(router) {
     const modifyUrl = (url) => {
       document.querySelector('.url').innerHTML = url;
     };
@@ -22,7 +20,8 @@ const navbar = () => {
 
         btnResults.addEventListener('click', seeResults);
         btnResults.style.display = 'block';
-        window.router.changeRoute('logged', 'logged');
+        modifyUrl('logged');
+        router.changeRoute('logged');
     };
 
     const logOut = () => {
@@ -36,9 +35,10 @@ const navbar = () => {
 
       btnLogout.removeEventListener('click', logOut);
       btnLogout.style.display = 'none';
-
-      window.router.changeRoute('login', 'login');
-    }
+      
+      modifyUrl('login');
+      router.changeRoute('login');
+    };
 
     const seeResults = () => {
       let btnHasher = document.querySelector('a.btn.btn-hasher');
@@ -48,28 +48,27 @@ const navbar = () => {
 
       btnHasher.addEventListener('click', goToHasher);
       btnHasher.style.display = 'block';
-
-      window.router.changeRoute('results', 'results');
-    }
+      modifyUrl('results');
+      router.changeRoute('results');
+    };
 
     const buttons = {
       'logged': goToHasher,
-      'login': () => {},
+      'login': () => {router.changeRoute('login')},
       'results': seeResults,
-    }
+    };
 
     const activateButtons = (routeName) => {
-      console.log('a')
+      modifyUrl(routeName);
       buttons[routeName]();
-    }
+    };
 
     return {
       modifyUrl,
       goToHasher,
       logOut,
       activateButtons,
-    }
-  // })
+    };
 };
 
-define(() => navbar);
+export default navbar;

@@ -27,7 +27,7 @@ a.btn.btn-hasher {
   display: none;
 }
 
-div.alert.alert-success.alert-hasher {
+div.alert.alert-warning.alert-hasher {
   position: absolute;
   bottom: 0;
   right: 0;

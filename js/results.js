@@ -1,6 +1,6 @@
 'use strict';
 
-const showResults = () => {
+const showResults = function() {
   const activate = () => {
     return new Promise((resolve, reject) => {
       let date = {};
@@ -31,12 +31,14 @@ const showResults = () => {
             </tr>
           `
         )
-      })
+      });
+      resolve();
     });
   }
   return {
     activate,
+    deactivate: ()=>{},
   }
-}
+};
 
-define(() => showResults())
+export default showResults;

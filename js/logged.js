@@ -1,19 +1,27 @@
 'use strict';
 
-const hash = () => {
+const hash = function() {
+  
   const hashPhrase = (e) => {
+    
     const emailObject = {
       date: new Date(),
-      userEmail: window.EMAIL,
+      userEmail: localStorage.getItem('loggedUserEmail'),
       hash: btoa(document.querySelector('.hash').value),
       input: document.querySelector('.hash').value
     };
-
-    let emailList = !!localStorage.getItem('emails') ? JSON.parse(localStorage.getItem('emails')) : [];
-    emailList.unshift(emailObject);
-    localStorage.setItem('emails', JSON.stringify(emailList));
+    let alertMessage = '';
+    if(emailObject.input.length > 0){
+      let emailList = !!localStorage.getItem('emails') ? JSON.parse(localStorage.getItem('emails')) : [];
+      emailList.unshift(emailObject);
+      localStorage.setItem('emails', JSON.stringify(emailList));
+      alertMessage = `Success! Your hash is: ${emailObject.hash.slice(0, 8)}`;
+    } else {
+      alertMessage = `Failure! Input is empty!`;
+    }
+    
     $('.alert-hasher')
-      .html(`Success! Your hash is: ${emailObject.hash.slice(0, 8)}`)
+      .html(alertMessage)
       .slideDown()
       .delay(1500)
       .slideUp();
@@ -34,7 +42,8 @@ const hash = () => {
   return {
     activate,
     deactivate
-  }
-}
+  };
+  
+};
 
-define(() => hash())
+export default hash;
