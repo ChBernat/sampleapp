@@ -1,0 +1,1 @@
+To launch entire application you have to be sure that you have NPM installed on your machine then you should navigate to a root folder of this application (a place where the index.html is placed) and run "npm run installAndCompile"... <br> Voila! That's it! Now, just open index.html and you can play around with this app!
