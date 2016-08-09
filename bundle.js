@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(7), __webpack_require__(4), __webpack_require__(5), __webpack_require__(3), __webpack_require__(6), __webpack_require__(1), __webpack_require__(8), __webpack_require__(9), __webpack_require__(10)], __WEBPACK_AMD_DEFINE_RESULT__ = function (_router, _navbar, _login, _logged, _dependencyLoader, _results, _login3, _logged3, _results3, _test) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(6), __webpack_require__(4), __webpack_require__(5), __webpack_require__(3), __webpack_require__(1), __webpack_require__(7), __webpack_require__(8), __webpack_require__(9), __webpack_require__(10)], __WEBPACK_AMD_DEFINE_RESULT__ = function (_router, _navbar, _login, _logged, _dependencyLoader, _results, _login3, _logged3, _results3, _test) {
 	  'use strict';
 
 	  var _router2 = _interopRequireDefault(_router);
@@ -75,9 +75,9 @@
 
 	  var hasher = function () {
 	    var navbar = {};
-
-	    var setConfig = function setConfig() {
-	      ;;
+	    var config = {};
+	    var setConfig = function setConfig(conf) {
+	      config = conf;
 	    };
 
 	    var setModules = function setModules() {
@@ -94,23 +94,19 @@
 	    };
 
 	    var loadDependencies = function loadDependencies() {
-	      return new Promise(function (resolve, reject) {
-	        navbar = (0, _navbar2.default)(_router2.default);
-	        resolve();
-	      });
+	      navbar = (0, _navbar2.default)(_router2.default);
 	    };
 
-	    var _init = function _init(config) {
-	      loadDependencies().then(function () {
-	        setConfig(config);
-	        setModules();
-	        setRoutes();
-	        navbar.activateButtons(_router2.default.checkRoute(localStorage.getItem('lastRoute')));
-	      });
+	    var _init = function _init(conf) {
+	      loadDependencies();
+	      setConfig(conf);
+	      setModules();
+	      setRoutes();
+	      navbar.activateButtons(_router2.default.checkRoute(localStorage.getItem('lastRoute')));
 	    };
 
 	    return {
-	      init: function init(config) {
+	      init: function init(conf) {
 	        return _init(config);
 	      },
 	      test: _test2.default
@@ -126,19 +122,27 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_RESULT__ = function (exports) {
-	  "use strict";
+	  'use strict';
 
 	  Object.defineProperty(exports, "__esModule", {
 	    value: true
 	  });
-
-	  exports.default = function (ctx) {
-	    return _template.call(ctx, ctx);
+	  var showResults = function showResults() {
+	    var activate = function activate() {
+	      var date = {};
+	      var emails = JSON.parse(localStorage.getItem('emails')) ? JSON.parse(localStorage.getItem('emails')) : [];
+	      emails.forEach(function (row) {
+	        date = new Date(row.date);
+	        document.querySelector('table').innerHTML = document.querySelector('table').innerHTML.concat('\n            <tr>\n              <td>' + row.userEmail + '</td>\n              <td>' + row.input + '</td>\n              <td>' + row.hash.slice(0, 8) + '</td>\n              <td class="text-left">                      ' + (date.getUTCHours() < 10 ? '0' + date.getUTCHours() : date.getUTCHours()) + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':' + (date.getSeconds() < 10 ? date.getSeconds() : date.getSeconds()) + '\n                                        <br>\n                                         ' + date.getFullYear() + '/' + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + '/' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '\n                  </td>\n            </tr>\n          ');
+	      });
+	    };
+	    return {
+	      activate: activate,
+	      deactivate: function deactivate() {}
+	    };
 	  };
 
-	  function _template(styles) {
-	    return "<div class=\"container container-login\" id=\"login-container\">\n  <div class=\"row\">\n    <div class=\"col-lg-5\"></div>\n    <div class=\"col-lg-6 well\">\n      <div class=\"input-group\">\n        <input type=\"text\" class=\"form-control email\" placeholder=\"Your e-mail goes here...\" />\n        <span class=\"input-group-btn\">\n          <button class=\"btn btn-success btn-login\" type=\"button\" id=\"login\">Log in</button>\n        </span>\n      </div><!-- /input-group -->\n      <div class=\"alert alert-danger\" role=\"alert\">Your e-mail address is incorrect!</div>\n    </div><!-- /.col-lg-6 -->\n  </div>\n</div>\n";
-	  };
+	  exports.default = showResults;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
@@ -220,22 +224,18 @@
 	    };
 
 	    var maitainRoute = function maitainRoute(module) {
-	      return new Promise(function (resolve, reject) {
-	        updateRoute(module.name);
-	        deactivatePrevEv();
-	        document.querySelector('main').innerHTML = module.template();
-	        var depScripts = module.resolvedDependencies.length > 0 ? module.resolvedDependencies.map(function (el) {
-	          return el.script;
-	        }) : [];
-	        var currentScript = module.script.apply(module, _toConsumableArray(depScripts));
-	        currentScript.activate().then(function () {
-	          if (module.name !== 'login') {
-	            localStorage.setItem('lastRoute', module.name);
-	          }
-	          deactivatePrevEv = currentScript.deactivate;
-	          resolve();
-	        }).catch(reject);
-	      });
+	      updateRoute(module.name);
+	      deactivatePrevEv();
+	      document.querySelector('main').innerHTML = module.template();
+	      var depScripts = module.resolvedDependencies.length > 0 ? module.resolvedDependencies.map(function (el) {
+	        return el.script;
+	      }) : [];
+	      var currentScript = module.script.apply(module, _toConsumableArray(depScripts));
+	      currentScript.activate();
+	      if (module.name !== 'login') {
+	        localStorage.setItem('lastRoute', module.name);
+	      }
+	      deactivatePrevEv = currentScript.deactivate;
 	    };
 
 	    return routerAPI;
@@ -303,7 +303,6 @@
 	    var logUserIn = function logUserIn(e) {
 	      var email = document.querySelector('input').value;
 	      if (validateEmail(email)) {
-	        window.EMAIL = email;
 	        localStorage.setItem('loggedUserEmail', email);
 	        navbar.goToHasher();
 	      } else {
@@ -312,10 +311,7 @@
 	    };
 
 	    var activate = function activate() {
-	      return new Promise(function (resolve, reject) {
-	        document.querySelector('#login').addEventListener('click', logUserIn);
-	        resolve();
-	      });
+	      document.querySelector('#login').addEventListener('click', logUserIn);
 	    };
 
 	    var deactivate = function deactivate() {
@@ -365,11 +361,8 @@
 	    };
 
 	    var activate = function activate() {
-	      return new Promise(function (resolve, reject) {
-	        document.querySelector('#hash').addEventListener('click', hashPhrase);
-	        $('#hash').popover();
-	        resolve();
-	      });
+	      document.querySelector('#hash').addEventListener('click', hashPhrase);
+	      $('#hash').popover();
 	    };
 
 	    var deactivate = function deactivate() {
@@ -387,36 +380,6 @@
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_RESULT__ = function (exports) {
-	  'use strict';
-
-	  Object.defineProperty(exports, "__esModule", {
-	    value: true
-	  });
-	  var showResults = function showResults() {
-	    var activate = function activate() {
-	      return new Promise(function (resolve, reject) {
-	        var date = {};
-	        JSON.parse(localStorage.getItem('emails')).forEach(function (row) {
-	          date = new Date(row.date);
-	          document.querySelector('table').innerHTML = document.querySelector('table').innerHTML.concat('\n            <tr>\n              <td>' + row.userEmail + '</td>\n              <td>' + row.input + '</td>\n              <td>' + row.hash.slice(0, 8) + '</td>\n              <td class="text-left">                      ' + (date.getUTCHours() < 10 ? '0' + date.getUTCHours() : date.getUTCHours()) + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':' + (date.getSeconds() < 10 ? date.getSeconds() : date.getSeconds()) + '\n                                        <br>\n                                         ' + date.getFullYear() + '/' + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + '/' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '\n                  </td>\n            </tr>\n          ');
-	        });
-	        resolve();
-	      });
-	    };
-	    return {
-	      activate: activate,
-	      deactivate: function deactivate() {}
-	    };
-	  };
-
-	  exports.default = showResults;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ },
-/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_RESULT__ = function (exports) {
@@ -499,6 +462,26 @@
 	    };
 
 	    exports.default = navbar;
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_RESULT__ = function (exports) {
+	  "use strict";
+
+	  Object.defineProperty(exports, "__esModule", {
+	    value: true
+	  });
+
+	  exports.default = function (ctx) {
+	    return _template.call(ctx, ctx);
+	  };
+
+	  function _template(styles) {
+	    return "<div class=\"container container-login\" id=\"login-container\">\n  <div class=\"row\">\n    <div class=\"col-lg-5\"></div>\n    <div class=\"col-lg-6 well\">\n      <div class=\"input-group\">\n        <input type=\"text\" class=\"form-control email\" placeholder=\"Your e-mail goes here...\" />\n        <span class=\"input-group-btn\">\n          <button class=\"btn btn-success btn-login\" type=\"button\" id=\"login\">Log in</button>\n        </span>\n      </div><!-- /input-group -->\n      <div class=\"alert alert-danger\" role=\"alert\">Your e-mail address is incorrect!</div>\n    </div><!-- /.col-lg-6 -->\n  </div>\n</div>\n";
+	  };
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },

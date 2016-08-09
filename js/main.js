@@ -14,29 +14,8 @@ import test from "./test";
 
 const hasher = (function(){
   let navbar = {};
-  
-  const setConfig = () => { 
-    requirejs.config({
-      baseUrl: './',
-      paths: {
-        es6: "node_modules/requirejs-babel/es6",
-        babel: "node_modules/requirejs-babel/babel-5.8.34.min",
-        text: './node_modules/text/text',
-      },
-    es6: {
-      fileExtension: '.js'
-    },
-    babel: {
-      presets: ['es2015'],
-      plugins: ['transform-es2015-modules-amd']
-    },      
-      text: {
-        useXhr: (url, protocol, hostname, port) => {
-          return true;
-        }
-      }
-    });
-  };
+  let config = {};
+  const setConfig = (conf) => {config = conf};
   
   const setModules = () => {
     moduler.module([], 'navbar', navbar);
@@ -52,24 +31,19 @@ const hasher = (function(){
   }
 
   const loadDependencies = () => {
-    return new Promise((resolve, reject) => {
-      navbar = nav(router);
-      resolve();
-    })
+    navbar = nav(router);
   }
 
-  const init = (config) => {
-    loadDependencies()
-      .then(() => {
-        setConfig(config);
-        setModules();
-        setRoutes();
-        navbar.activateButtons(router.checkRoute(localStorage.getItem('lastRoute')));
-    });
+  const init = (conf) => {
+    loadDependencies();
+    setConfig(conf);
+    setModules();
+    setRoutes();
+    navbar.activateButtons(router.checkRoute(localStorage.getItem('lastRoute')));
   };
 
   return {
-    init: (config) => init(config),
+    init: (conf) => init(config),
     test,
   };
 }())

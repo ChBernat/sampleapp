@@ -28,11 +28,8 @@ const hash = function() {
   };
 
   const activate = () => {
-    return new Promise((resolve, reject) => {
       document.querySelector('#hash').addEventListener('click', hashPhrase);
       $('#hash').popover();
-      resolve();
-    })
   };
 
   const deactivate = () => {

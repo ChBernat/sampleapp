@@ -40,22 +40,16 @@ const router = (function() {
   };
   
   const maitainRoute = (module) => {
-   return new Promise((resolve, reject) => {
      updateRoute(module.name);
     deactivatePrevEv();
     document.querySelector('main').innerHTML = module.template();
     let depScripts = (module.resolvedDependencies.length > 0) ? module.resolvedDependencies.map(el => el.script) : [];
     let currentScript = module.script(...depScripts);
-    currentScript.activate()
-      .then(() => {
+    currentScript.activate();
         if (module.name !== 'login'){
           localStorage.setItem('lastRoute', module.name);
         }
         deactivatePrevEv = currentScript.deactivate;
-        resolve();
-      })
-      .catch(reject);
-    })
    }
     
   return routerAPI;

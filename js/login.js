@@ -10,7 +10,6 @@ const login = function(navbar) {
   const logUserIn = (e) => {
     let email = document.querySelector('input').value;
     if(validateEmail(email)) {
-      window.EMAIL = email;
       localStorage.setItem('loggedUserEmail', email);
       navbar.goToHasher();
     } else {
@@ -21,10 +20,7 @@ const login = function(navbar) {
   };
 
   const activate = () => {
-    return new Promise((resolve, reject) => {
-      document.querySelector('#login').addEventListener('click', logUserIn);
-      resolve();
-    });
+    document.querySelector('#login').addEventListener('click', logUserIn);
   };
 
   const deactivate = () => {

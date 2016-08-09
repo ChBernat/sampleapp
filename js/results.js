@@ -2,9 +2,9 @@
 
 const showResults = function() {
   const activate = () => {
-    return new Promise((resolve, reject) => {
       let date = {};
-      JSON.parse(localStorage.getItem('emails')).forEach((row) => {
+      let emails = JSON.parse(localStorage.getItem('emails')) ? JSON.parse(localStorage.getItem('emails')) : [];
+      emails.forEach((row) => {
         date = new Date(row.date);
         document.querySelector('table').innerHTML = document.querySelector('table').innerHTML.concat(
           `
@@ -32,8 +32,6 @@ const showResults = function() {
           `
         )
       });
-      resolve();
-    });
   }
   return {
     activate,
